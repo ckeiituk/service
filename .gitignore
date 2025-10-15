@@ -1,7 +1,6 @@
 /target
 .DS_Store
 CLAUDE.md
-AGENTS.md
 
 # Logs
 *.log
@@ -39,3 +38,15 @@ Desktop.ini
 .fleet/
 *.sublime-project
 *.sublime-workspace
+
+# Local clones and external deps
+external/
+
+# macOS debug symbols
+*.dSYM/
+
+# Merge and backup artifacts
+*.orig
+*.rej
+*.old
+*.bk

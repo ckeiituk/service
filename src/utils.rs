@@ -61,27 +61,63 @@ pub fn run_command(cmd: &str, args: &[&str], debug: bool) -> Result<(), Error> {
 pub fn uninstall_old_service() -> Result<(), Error> {
     use std::path::Path;
 
-    let target_binary_path = "/Library/PrivilegedHelperTools/io.github.clashverge.helper";
-    let plist_file = "/Library/LaunchDaemons/io.github.clashverge.helper.plist";
-
-    // Stop and unload service
-    run_command("launchctl", &["stop", "io.github.clashverge.helper"], false)?;
-    run_command("launchctl", &["bootout", "system", plist_file], false)?;
-    run_command(
-        "launchctl",
-        &["disable", "system/io.github.clashverge.helper"],
-        false,
-    )?;
-
-    // Remove files
-    if Path::new(plist_file).exists() {
-        std::fs::remove_file(plist_file)
-            .map_err(|e| anyhow::anyhow!("Failed to remove plist file: {}", e))?;
+    fn try_launchctl(args: &[&str]) {
+        let _ = run_command("launchctl", args, false);
     }
 
-    if Path::new(target_binary_path).exists() {
-        std::fs::remove_file(target_binary_path)
-            .map_err(|e| anyhow::anyhow!("Failed to remove service binary: {}", e))?;
+    let legacy_items = [
+        (
+            "io.github.clashverge.helper",
+            "/Library/LaunchDaemons/io.github.clashverge.helper.plist",
+        ),
+        (
+            "io.github.koala-clash.helper",
+            "/Library/LaunchDaemons/io.github.koala-clash.helper.plist",
+        ),
+        (
+            "io.github.koala-clash.service",
+            "/Library/LaunchDaemons/io.github.koala-clash.service.plist",
+        ),
+    ];
+
+    for (identifier, plist) in legacy_items {
+        try_launchctl(&["stop", identifier]);
+        try_launchctl(&["bootout", "system", plist]);
+        let disable_target = format!("system/{}", identifier);
+        try_launchctl(&["disable", &disable_target]);
+
+        let plist_path = Path::new(plist);
+        if plist_path.exists() {
+            std::fs::remove_file(plist_path).map_err(|e| {
+                anyhow::anyhow!("Failed to remove legacy launchd plist {}: {}", plist, e)
+            })?;
+        }
+    }
+
+    let legacy_binaries = [
+        "/Library/PrivilegedHelperTools/io.github.clashverge.helper",
+        "/Library/PrivilegedHelperTools/io.github.koala-clash.helper",
+    ];
+
+    for binary in legacy_binaries {
+        let path = Path::new(binary);
+        if path.exists() {
+            std::fs::remove_file(path).map_err(|e| {
+                anyhow::anyhow!("Failed to remove legacy helper binary {}: {}", binary, e)
+            })?;
+        }
+    }
+
+    let legacy_bundles =
+        ["/Library/PrivilegedHelperTools/io.github.koala-clash.service.bundle"];
+
+    for bundle in legacy_bundles {
+        let path = Path::new(bundle);
+        if path.exists() {
+            std::fs::remove_dir_all(path).map_err(|e| {
+                anyhow::anyhow!("Failed to remove legacy service bundle {}: {}", bundle, e)
+            })?;
+        }
     }
 
     Ok(())

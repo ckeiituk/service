@@ -54,11 +54,13 @@ pub struct IpcResponse {
     pub signature: String,
 }
 
+const SHARED_APP_SECRET: &str = "outclash-app-secret-fuck-me-until-daylight";
+
 /// todo - 必须与客户端使用相同的方法
 fn derive_secret_key() -> Vec<u8> {
-    let unique_app_id = "clash-verge-app-secret-fuck-me-until-daylight";
+    // The desktop client uses the same literal in `service_ipc.rs`; keep them in sync.
     let mut hasher = Sha256::new();
-    hasher.update(unique_app_id.as_bytes());
+    hasher.update(SHARED_APP_SECRET.as_bytes());
     hasher.finalize().to_vec()
 }
 
