@@ -10,7 +10,7 @@ use anyhow::Error;
 
 #[cfg(target_os = "macos")]
 fn main() -> Result<(), Error> {
-    use clash_verge_service::utils::{run_command, uninstall_old_service};
+    use outclash_service::utils::{run_command, uninstall_old_service};
     use std::fs::File;
     use std::io::Write;
     use std::path::Path;
@@ -20,10 +20,10 @@ fn main() -> Result<(), Error> {
 
     let service_binary_path = env::current_exe()
         .unwrap()
-        .with_file_name("clash-verge-service");
+        .with_file_name("outclash-service");
 
     if !service_binary_path.exists() {
-        return Err(anyhow::anyhow!("clash-verge-service binary not found"));
+        return Err(anyhow::anyhow!("outclash-service binary not found"));
     }
 
     // 定义 bundle 路径
@@ -37,7 +37,7 @@ fn main() -> Result<(), Error> {
         .map_err(|e| anyhow::anyhow!("Failed to create bundle directories: {}", e))?;
 
     // 复制二进制文件到 bundle 的 MacOS 目录
-    let target_binary_path = format!("{}/clash-verge-service", macos_path);
+    let target_binary_path = format!("{}/outclash-service", macos_path);
     std::fs::copy(&service_binary_path, &target_binary_path)
         .map_err(|e| anyhow::anyhow!("Failed to copy service file: {}", e))?;
 
@@ -113,8 +113,8 @@ fn main() -> Result<(), Error> {
 
 #[cfg(target_os = "linux")]
 fn main() -> Result<(), Error> {
-    const SERVICE_NAME: &str = "clash-verge-service";
-    use clash_verge_service::utils::run_command;
+    const SERVICE_NAME: &str = "outclash-service";
+    use outclash_service::utils::run_command;
     use std::fs::File;
     use std::io::Write;
     use std::path::Path;
@@ -123,10 +123,10 @@ fn main() -> Result<(), Error> {
 
     let service_binary_path = env::current_exe()
         .unwrap()
-        .with_file_name("clash-verge-service");
+        .with_file_name("outclash-service");
 
     if !service_binary_path.exists() {
-        return Err(anyhow::anyhow!("clash-verge-service binary not found"));
+        return Err(anyhow::anyhow!("outclash-service binary not found"));
     }
 
     // Check service status
@@ -203,10 +203,10 @@ fn main() -> windows_service::Result<()> {
 
     let service_binary_path = env::current_exe()
         .unwrap()
-        .with_file_name("clash-verge-service.exe");
+        .with_file_name("outclash-service.exe");
 
     if !service_binary_path.exists() {
-        eprintln!("clash-verge-service.exe not found");
+        eprintln!("outclash-service.exe not found");
         std::process::exit(2);
     }
 

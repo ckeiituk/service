@@ -18,9 +18,9 @@ use std::ffi::OsStr;
 
 /// IPC通信常量
 const IPC_SOCKET_NAME: &str = if cfg!(windows) {
-    r"\\.\pipe\clash-verge-service"
+    r"\\.\pipe\outclash-service"
 } else {
-    "/tmp/clash-verge-service.sock"
+    "/tmp/outclash-service.sock"
 };
 
 /// 消息时间有效期(秒)

@@ -8,7 +8,7 @@ use tokio::runtime::Runtime;
 use log::{info, error};
 
 #[cfg(target_os = "macos")]
-use clash_verge_service::utils;
+use outclash_service::utils;
 #[cfg(windows)]
 use std::{ffi::OsString, time::Duration};
 #[cfg(windows)]

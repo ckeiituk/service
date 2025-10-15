@@ -10,7 +10,7 @@ use anyhow::Error;
 
 #[cfg(target_os = "macos")]
 fn main() -> Result<(), Error> {
-    use clash_verge_service::utils::{run_command, uninstall_old_service};
+    use outclash_service::utils::{run_command, uninstall_old_service};
     use std::env;
     use std::path::Path;
 
@@ -50,8 +50,8 @@ fn main() -> Result<(), Error> {
 
 #[cfg(target_os = "linux")]
 fn main() -> Result<(), Error> {
-    use clash_verge_service::utils::run_command;
-    const SERVICE_NAME: &str = "clash-verge-service";
+    use outclash_service::utils::run_command;
+    const SERVICE_NAME: &str = "outclash-service";
     use std::env;
 
     let debug = env::args().any(|arg| arg == "--debug");
