@@ -46,7 +46,7 @@ fn main() -> windows_service::Result<()> {
         eprintln!("日志初始化失败: {}", e);
     }
     
-    info!("Starting Clash Verge Service");
+    info!("Starting Outclash Service");
     service::main()
 }
 
@@ -58,6 +58,6 @@ fn main() {
         eprintln!("日志初始化失败: {}", e);
     }
     
-    info!("Starting Clash Verge Service");
+    info!("Starting Outclash Service");
     service::main();
 }

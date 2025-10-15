@@ -28,7 +28,7 @@ fn main() -> Result<(), Error> {
 
     // 定义 bundle 路径
     let bundle_path =
-        "/Library/PrivilegedHelperTools/io.github.clash-verge-rev.clash-verge-rev.service.bundle";
+        "/Library/PrivilegedHelperTools/io.github.outclash.service.bundle";
     let contents_path = format!("{}/Contents", bundle_path);
     let macos_path = format!("{}/MacOS", contents_path);
 
@@ -57,7 +57,7 @@ fn main() -> Result<(), Error> {
 
     // 创建并写入 launchd plist
     let plist_file =
-        "/Library/LaunchDaemons/io.github.clash-verge-rev.clash-verge-rev.service.plist";
+        "/Library/LaunchDaemons/io.github.outclash.service.plist";
     let plist_file = Path::new(plist_file);
 
     let launchd_plist_content = include_str!("files/launchd.plist.tmpl");
@@ -88,7 +88,7 @@ fn main() -> Result<(), Error> {
         "launchctl",
         &[
             "enable",
-            "system/io.github.clash-verge-rev.clash-verge-rev.service",
+            "system/io.github.outclash.service",
         ],
         debug,
     );
@@ -104,7 +104,7 @@ fn main() -> Result<(), Error> {
     );
     let _ = run_command(
         "launchctl",
-        &["start", "io.github.clash-verge-rev.clash-verge-rev.service"],
+        &["start", "io.github.outclash.service"],
         debug,
     );
 
@@ -185,7 +185,7 @@ fn main() -> windows_service::Result<()> {
     let service_manager = ServiceManager::local_computer(None::<&str>, manager_access)?;
 
     let service_access = ServiceAccess::QUERY_STATUS | ServiceAccess::START;
-    if let Ok(service) = service_manager.open_service("clash_verge_service", service_access) {
+    if let Ok(service) = service_manager.open_service("outclash_service", service_access) {
         if let Ok(status) = service.query_status() {
             match status.current_state {
                 ServiceState::StopPending
@@ -211,8 +211,8 @@ fn main() -> windows_service::Result<()> {
     }
 
     let service_info = ServiceInfo {
-        name: OsString::from("clash_verge_service"),
-        display_name: OsString::from("Clash Verge Service"),
+        name: OsString::from("outclash_service"),
+        display_name: OsString::from("Outclash Service"),
         service_type: ServiceType::OWN_PROCESS,
         start_type: ServiceStartType::AutoStart,
         error_control: ServiceErrorControl::Normal,
@@ -226,7 +226,7 @@ fn main() -> windows_service::Result<()> {
     let start_access = ServiceAccess::CHANGE_CONFIG | ServiceAccess::START;
     let service = service_manager.create_service(&service_info, start_access)?;
 
-    service.set_description("Clash Verge Service helps to launch clash core")?;
+    service.set_description("Outclash Service helps to launch clash core")?;
     service.start(&Vec::<&OsStr>::new())?;
 
     Ok(())

@@ -1,6 +1,7 @@
 /target
 .DS_Store
 CLAUDE.md
+AGENTS.md
 
 # Logs
 *.log
